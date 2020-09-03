@@ -1,0 +1,17 @@
+package org.piccolo.node;
+
+public enum TokenType {
+    NULL,
+    VARIABLE_TYPE,
+    IDENTIFIER,
+    RETURN_ACTION,
+    VARIABLE_DEFINITION,
+    PARAMETER_LIST,
+    FUNCTION_SIGNATURE,
+    FUNCTION_BODY,
+    LITERAL,
+    OPERATOR,
+    EXPRESSION,
+    FUNCTION_DEFINITION,
+    MODULE
+}

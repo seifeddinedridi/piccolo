@@ -1,0 +1,73 @@
+package org.piccolo.node;
+
+import static java.util.Arrays.asList;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.piccolo.parsing.context.Cursor;
+
+public class TokenNodeFactory {
+
+    private static TokenNodeFactory instance;
+
+    private TokenNodeFactory() {
+    }
+
+    public static synchronized TokenNodeFactory getInstance() {
+        if (instance == null) {
+            instance = new TokenNodeFactory();
+        }
+        return instance;
+    }
+
+    public TokenNode createVariableDefinition(TokenNode variableName, TokenNode variableType, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.VARIABLE_DEFINITION, variableName.getName(), 0,
+            asList(variableName, variableType), tokenStartPosition);
+    }
+
+    public TokenNode createOperator(String operator, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.OPERATOR, operator, computePrecedence(operator), new ArrayList<>(), tokenStartPosition);
+    }
+
+    private int computePrecedence(String operator) {
+        switch (operator) {
+            case "=":
+                return 1;
+            case "+":
+            case "-":
+            case "%":
+                return 2;
+            case "*":
+                return 3;
+            case "/":
+                return 4;
+            default:
+                return 0;
+        }
+    }
+
+    public TokenNode createIdentifier(String name, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.IDENTIFIER, name, 0, Collections.emptyList(), tokenStartPosition);
+    }
+
+    public TokenNode createLiteral(String value, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.LITERAL, value, 0, Collections.emptyList(), tokenStartPosition);
+    }
+
+    public TokenNode createPrimitiveType(String type, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.VARIABLE_TYPE, type, 0, Collections.emptyList(), tokenStartPosition);
+    }
+
+    public TokenNode createReturnAction(Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.RETURN_ACTION, "return", 0, new ArrayList<>(), tokenStartPosition);
+    }
+
+    public TokenNode createExpression(Cursor tokenStartPosition) {
+        return new ExpressionNode("", tokenStartPosition);
+    }
+
+    public TokenNode createModule(TokenType tokenType, List<TokenNode> children) {
+        return new TokenNode(tokenType, "", 0, children, children.isEmpty() ? null : children.get(0).getTokenStartPosition());
+    }
+}
