@@ -12,8 +12,8 @@ public class FunctionSignatureNode extends TokenNode {
         return children.get(0).getChildren().get(0).getName();
     }
 
-    public String getFunctionReturnType() {
-        return children.get(0).getChildren().get(1).getName();
+    public TokenNode getFunctionReturnType() {
+        return children.get(0).getChildren().get(1);
     }
 
     public ParameterListNode getParameterListNode() {
