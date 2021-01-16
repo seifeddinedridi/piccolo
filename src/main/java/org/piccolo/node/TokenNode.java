@@ -1,14 +1,15 @@
 package org.piccolo.node;
 
 import org.piccolo.parsing.context.Cursor;
+import org.piccolo.parsing.context.ParsingContext;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class TokenNode {
 
     public static final TokenNode NULl_TOKEN = new TokenNode(TokenType.NULL, null, 0, null, null);
+
     protected final TokenType type;
     protected final List<TokenNode> children;
     protected final int precedence;
@@ -58,6 +59,32 @@ public class TokenNode {
 
     public int getPrecedence() {
         return precedence;
+    }
+
+    public String getNodeReturnType(ParsingContext context) {
+        switch (type) {
+            case VARIABLE_DEFINITION:
+                return children.get(0).getName();
+            case LITERAL:
+                return "int"; // @TODO: literals should have a type as an attribute
+            case IDENTIFIER:
+                return context.getVariableRef(name).getChildren().get(1).getName();
+            case OPERATOR:
+                if (children.size() == 1) {
+                    if (children.get(0).getType() == TokenType.IDENTIFIER) {
+                        return context.getVariableRef(children.get(1).getName()).getChildren().get(0).getName();
+                    } else if (children.get(0).getType() == TokenType.LITERAL) {
+                        return "int"; // @TODO: literals should have a type as an attribute
+                    } else if (children.get(0).getType() == TokenType.OPERATOR) {
+                        return getNodeReturnType(context);
+                    }
+                } else if (children.size() == 2) {
+                    String leftSideType = children.get(0).getNodeReturnType(context);
+//                    String rightSideType = children.get(1).getNodeReturnType(context);
+                    return leftSideType;
+                }
+        }
+        return "";
     }
 
     @Override

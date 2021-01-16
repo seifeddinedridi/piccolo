@@ -93,6 +93,10 @@ public class ParsingContext {
         return node;
     }
 
+    public TokenNode createReturnVoidAction() {
+        return nodeFactory.createReturnVoidAction(tokenStartPosition);
+    }
+
     private void validateStructure(TokenNode previousNode, TokenNode currentNode) {
         if (previousNode.isOperand() && currentNode != null && currentNode.isOperand()) {
             // Two successive literal nodes are not allowed
@@ -196,5 +200,12 @@ public class ParsingContext {
             return parentContext.isRegistered(functionSignature);
         }
         return functionDefinitions.containsKey(functionSignature.getFunctionName());
+    }
+
+    public TokenNode getVariableRef(String name) {
+        if (!containsVariable(name)) {
+            return null;
+        }
+        return variableDefinitions.get(name);
     }
 }

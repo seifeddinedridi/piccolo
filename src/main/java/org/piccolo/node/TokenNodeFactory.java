@@ -21,15 +21,6 @@ public class TokenNodeFactory {
         return instance;
     }
 
-    public TokenNode createVariableDefinition(TokenNode variableName, TokenNode variableType, Cursor tokenStartPosition) {
-        return new TokenNode(TokenType.VARIABLE_DEFINITION, variableName.getName(), 0,
-            asList(variableName, variableType), tokenStartPosition);
-    }
-
-    public TokenNode createOperator(String operator, Cursor tokenStartPosition) {
-        return new TokenNode(TokenType.OPERATOR, operator, computePrecedence(operator), new ArrayList<>(), tokenStartPosition);
-    }
-
     private int computePrecedence(String operator) {
         switch (operator) {
             case "=":
@@ -47,6 +38,15 @@ public class TokenNodeFactory {
         }
     }
 
+    public TokenNode createVariableDefinition(TokenNode variableName, TokenNode variableType, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.VARIABLE_DEFINITION, variableName.getName(), 0,
+                asList(variableName, variableType), tokenStartPosition);
+    }
+
+    public TokenNode createOperator(String operator, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.OPERATOR, operator, computePrecedence(operator), new ArrayList<>(), tokenStartPosition);
+    }
+
     public TokenNode createIdentifier(String name, Cursor tokenStartPosition) {
         return new TokenNode(TokenType.IDENTIFIER, name, 0, Collections.emptyList(), tokenStartPosition);
     }
@@ -61,6 +61,15 @@ public class TokenNodeFactory {
 
     public TokenNode createReturnAction(Cursor tokenStartPosition) {
         return new TokenNode(TokenType.RETURN_ACTION, "return", 0, new ArrayList<>(), tokenStartPosition);
+    }
+
+    public TokenNode createReturnVoidAction(Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.RETURN_ACTION, "return",
+                0, Collections.singletonList(createVoidToken(tokenStartPosition)), tokenStartPosition);
+    }
+
+    private TokenNode createVoidToken(Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.NULL, "void", 0, null, tokenStartPosition);
     }
 
     public TokenNode createExpression(Cursor tokenStartPosition) {
