@@ -1,5 +1,3 @@
-int xx=1*2*3*4*5;
-
 int helloWorld(int x,int y, int z)
 {
     int xx = 1 + 2 + 3;
@@ -7,7 +5,3 @@ int helloWorld(int x,int y, int z)
     int zz;
     return xx * yy;
 }
-
-int mama() {}
-
-int mama1() {}

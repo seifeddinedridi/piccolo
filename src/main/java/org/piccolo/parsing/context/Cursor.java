@@ -4,26 +4,26 @@ public class Cursor {
 
     private int currentLine;
     private int currentColumn;
-    private int previousLineColumnStartIndex;
+    private int currentLineColumnStartIndex;
     private char previousChar;
 
-    private Cursor(int currentLine, int currentColumn, int previousLineColumnStartIndex, char previousChar) {
+    private Cursor(int currentLine, int currentColumn, int currentLineColumnStartIndex, char previousChar) {
         this.currentLine = currentLine;
         this.currentColumn = currentColumn;
-        this.previousLineColumnStartIndex = previousLineColumnStartIndex;
+        this.currentLineColumnStartIndex = currentLineColumnStartIndex;
         this.previousChar = previousChar;
     }
 
     public Cursor() {
         this.currentLine = 0;
         this.currentColumn = 0;
-        this.previousLineColumnStartIndex = 0;
+        this.currentLineColumnStartIndex = 0;
         this.previousChar = 0;
     }
 
     public void nextColumn(char currentChar) {
-        if (System.lineSeparator().equals(String.valueOf(currentChar)) || System.lineSeparator()
-            .equals(String.valueOf(new char[]{previousChar, currentChar}))) {
+        if (System.lineSeparator().equals(String.valueOf(currentChar))
+                || System.lineSeparator().equals(String.valueOf(new char[]{previousChar, currentChar}))) {
             nextLine();
         }
         previousChar = currentChar;
@@ -34,8 +34,8 @@ public class Cursor {
         currentColumn--;
     }
 
-    public void nextLine() {
-        previousLineColumnStartIndex = currentColumn;
+    private void nextLine() {
+        currentLineColumnStartIndex = currentColumn;
         currentLine++;
     }
 
@@ -48,17 +48,17 @@ public class Cursor {
     }
 
     public int getColumnOffset() {
-        return currentColumn - previousLineColumnStartIndex;
+        return currentColumn - currentLineColumnStartIndex;
     }
 
     public Cursor copy() {
-        return new Cursor(currentLine, currentColumn, previousLineColumnStartIndex, previousChar);
+        return new Cursor(currentLine, currentColumn, currentLineColumnStartIndex, previousChar);
     }
 
     public void copyFrom(Cursor other) {
         this.currentColumn = other.currentColumn;
         this.currentLine = other.currentLine;
-        this.previousLineColumnStartIndex = other.previousLineColumnStartIndex;
+        this.currentLineColumnStartIndex = other.currentLineColumnStartIndex;
         this.previousChar = other.previousChar;
     }
 }

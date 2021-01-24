@@ -23,7 +23,7 @@ public class FunctionParserTest {
 
     @Test
     public void parseFunction_ReturnsTokenNode_WhenFunctionHasEmptyBody() {
-        FunctionNode functionDefinition = functionParser.parse(context, "int helloWorld() {}");
+        FunctionNode functionDefinition = functionParser.parse(context, "void helloWorld() {}");
         assertNotNull(functionDefinition);
 
         String json = TokenNodeUtil.toJson(functionDefinition);
@@ -35,15 +35,16 @@ public class FunctionParserTest {
             .assertThat("$.children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "helloWorld"))
             .assertThat("$.children[0].children[0].children", hasSize(2))
             .assertThat("$.children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "helloWorld"))
-            .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
+            .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "void"))
             .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
             .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
-            .assertThat("$.children[1].children", hasSize(0));
+            .assertThat("$.children[1].children", hasSize(1))
+            .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
     }
 
     @Test
     public void parseFunction_ReturnsTokenNode_WhenFunctionHasNoParameters() {
-        FunctionNode functionDefinition = functionParser.parse(context, "int helloWorld() { int x = 1 + 2;}");
+        FunctionNode functionDefinition = functionParser.parse(context, "int helloWorld() { int x = 1 + 2; return x;}");
         assertNotNull(functionDefinition);
         String json = TokenNodeUtil.toJson(functionDefinition);
         with(json)
@@ -57,7 +58,7 @@ public class FunctionParserTest {
             .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
             .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
             .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
-            .assertThat("$.children[1].children", hasSize(1))
+            .assertThat("$.children[1].children", hasSize(2))
             .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "="))
             .assertThat("$.children[1].children[0].children", hasSize(2))
             .assertThat("$.children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "x"))
@@ -67,12 +68,13 @@ public class FunctionParserTest {
             .assertThat("$.children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "+"))
             .assertThat("$.children[1].children[0].children[1].children", hasSize(2))
             .assertThat("$.children[1].children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.LITERAL, "1"))
-            .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.LITERAL, "2"));
+            .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.LITERAL, "2"))
+            .assertThat("$.children[1].children[1]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
     }
 
     @Test
     public void parseFunction_ReturnsTokenNode_WhenFunctionHasParameters() {
-        FunctionNode functionDefinition = functionParser.parse(context, "int helloWorld(int x, int y) { int z = x + y;}");
+        FunctionNode functionDefinition = functionParser.parse(context, "int helloWorld(int x, int y) { int z = x + y; return z;}");
         assertNotNull(functionDefinition);
         String json = TokenNodeUtil.toJson(functionDefinition);
         with(json)
@@ -93,7 +95,7 @@ public class FunctionParserTest {
             .assertThat("$.children[0].children[1].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "y"))
             .assertThat("$.children[0].children[1].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
             .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
-            .assertThat("$.children[1].children", hasSize(1))
+            .assertThat("$.children[1].children", hasSize(2))
             .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "="))
             .assertThat("$.children[1].children[0].children", hasSize(2))
             .assertThat("$.children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "z"))
@@ -103,7 +105,8 @@ public class FunctionParserTest {
             .assertThat("$.children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "+"))
             .assertThat("$.children[1].children[0].children[1].children", hasSize(2))
             .assertThat("$.children[1].children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "x"))
-            .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "y"));
+            .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "y"))
+            .assertThat("$.children[1].children[1]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
     }
 
     @Test

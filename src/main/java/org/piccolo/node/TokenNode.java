@@ -1,18 +1,20 @@
 package org.piccolo.node;
 
+import org.piccolo.parsing.context.Cursor;
+import org.piccolo.parsing.context.ParsingContext;
+
 import java.util.Arrays;
 import java.util.List;
-import org.piccolo.parsing.context.Cursor;
 
 public class TokenNode {
 
+    public static final TokenNode NULl_TOKEN = new TokenNode(TokenType.NULL, null, 0, null, null);
+
     protected final TokenType type;
-    private final String name;
     protected final List<TokenNode> children;
     protected final int precedence;
+    private final String name;
     private final Cursor tokenStartPosition;
-
-    public static final TokenNode NULl_TOKEN = new TokenNode(TokenType.NULL, null, 0, null, null);
 
     public TokenNode(TokenType type, String name, int precedence, List<TokenNode> children, Cursor tokenStartPosition) {
         this.type = type;
@@ -28,15 +30,15 @@ public class TokenNode {
 
     public boolean isAssignableType() {
         return type == TokenType.IDENTIFIER
-            || type == TokenType.LITERAL
-            || type == TokenType.VARIABLE_DEFINITION
-            || type == TokenType.OPERATOR
-            || type == TokenType.RETURN_ACTION;
+                || type == TokenType.LITERAL
+                || type == TokenType.VARIABLE_DEFINITION
+                || type == TokenType.OPERATOR
+                || type == TokenType.RETURN_ACTION;
     }
 
     public boolean isOperand() {
         return type == TokenType.LITERAL || type == TokenType.IDENTIFIER
-            || type == TokenType.VARIABLE_DEFINITION;
+                || type == TokenType.VARIABLE_DEFINITION;
     }
 
     public boolean matchesTypes(TokenType... types) {
@@ -59,15 +61,62 @@ public class TokenNode {
         return precedence;
     }
 
+    public String getNodeReturnType(ParsingContext context) {
+        switch (type) {
+            case VARIABLE_DEFINITION:
+                return children.get(0).getName();
+            case LITERAL:
+                return name; // @TODO: literals should have a type as an attribute
+            case IDENTIFIER:
+                return context.getVariableRef(name).getChildren().get(1).getName();
+            case OPERATOR:
+                if (children.size() == 1) {
+                    if (children.get(0).getType() == TokenType.IDENTIFIER) {
+                        return context.getVariableRef(children.get(1).getName()).getChildren().get(0).getName();
+                    } else if (children.get(0).getType() == TokenType.LITERAL) {
+                        return "int"; // @TODO: literals should have a type as an attribute
+                    } else if (children.get(0).getType() == TokenType.OPERATOR) {
+                        return getNodeReturnType(context);
+                    }
+                } else if (children.size() == 2) {
+                    String leftSideType = children.get(0).getNodeReturnType(context);
+//                    String rightSideType = children.get(1).getNodeReturnType(context);
+                    return leftSideType;
+                }
+        }
+        return "";
+    }
+
     @Override
     public String toString() {
         return "TokenNode{" +
-            "type=" + type +
-            ", name='" + name + '\'' +
-            '}';
+                "type=" + type +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public Cursor getTokenStartPosition() {
         return tokenStartPosition;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TokenNode tokenNode = (TokenNode) o;
+
+        if (type != tokenNode.type) return false;
+        return true;
+//        if (!Objects.equals(name, tokenNode.name)) return false;
+//        return Objects.equals(children, tokenNode.children);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (children != null ? children.hashCode() : 0);
+        return result;
     }
 }

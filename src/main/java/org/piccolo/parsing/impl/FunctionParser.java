@@ -46,6 +46,15 @@ public class FunctionParser implements Parser<FunctionNode> {
                     context.reportError("Function with name '" + functionSignature.getFunctionName() + "' was already defined");
                 }
                 FunctionBodyNode functionBody = functionBodyParser.parse(childContext, codeStr);
+                TokenNode returnNode = functionBody.getReturnNode();
+                String functionReturnType = functionSignature.getFunctionReturnType().getName();
+                if (!functionReturnType.equals(returnNode.getNodeReturnType(childContext))) {
+                    if (returnNode.getTokenStartPosition() != null) {
+                        childContext.moveToCursor(returnNode.getTokenStartPosition());
+                    }
+                    childContext.reportError("Return type '" + returnNode.getName()
+                            + "' does not match function's return type '" + functionReturnType + "'");
+                }
                 functionNode = new FunctionNode(functionSignature, functionBody);
             } else {
                 context.nextColumn(codeStr);

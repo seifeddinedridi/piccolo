@@ -1,23 +1,24 @@
 package org.piccolo.parsing.context;
 
+import org.piccolo.node.FunctionNode;
+import org.piccolo.node.FunctionSignatureNode;
+import org.piccolo.node.TokenNode;
+import org.piccolo.node.TokenNodeFactory;
+import org.piccolo.node.TokenType;
+import org.piccolo.parsing.exception.ParsingException;
+import org.piccolo.parsing.util.ParsingUtils;
+
 import java.util.HashMap;
 import java.util.Map;
-import org.piccolo.node.FunctionSignatureNode;
-import org.piccolo.node.TokenNodeFactory;
-import org.piccolo.parsing.exception.ParsingException;
-import org.piccolo.node.FunctionNode;
-import org.piccolo.node.TokenNode;
-import org.piccolo.node.TokenType;
-import org.piccolo.parsing.util.ParsingUtils;
 
 public class ParsingContext {
 
     private final CompilationErrorListener errorListener;
-    private Cursor cursor;
     private final StringBuilder tokenBuffer;
     private final Map<String, TokenNode> variableDefinitions;
     private final Map<String, TokenNode> functionDefinitions;
     private final TokenNodeFactory nodeFactory;
+    private Cursor cursor;
     private ParsingContext parentContext;
     private TokenNode previousNode = TokenNode.NULl_TOKEN;
     private Cursor tokenStartPosition;
@@ -38,19 +39,19 @@ public class ParsingContext {
     }
 
     public void skipSpace(String codeStr) {
-        if (cursor.getCurrentColumn() < codeStr.length() && codeStr.charAt(cursor.getCurrentColumn()) == ' ') {
-            do {
-                cursor.nextColumn(codeStr.charAt(cursor.getCurrentColumn()));
-            } while (cursor.getCurrentColumn() < codeStr.length() && codeStr.charAt(cursor.getCurrentColumn()) == ' ');
+        while (cursor.getCurrentColumn() < codeStr.length() && codeStr.charAt(cursor.getCurrentColumn()) == ' ') {
+            cursor.nextColumn(codeStr.charAt(cursor.getCurrentColumn()));
         }
     }
 
     public void skipNonParsableCharacter(String codeStr) {
-        if (cursor.getCurrentColumn() < codeStr.length() && ParsingUtils.isSkippeableCharacter(codeStr.charAt(cursor.getCurrentColumn()))) {
-            do {
-                cursor.nextColumn(codeStr.charAt(cursor.getCurrentColumn()));
-            } while (cursor.getCurrentColumn() < codeStr.length() && ParsingUtils
-                .isSkippeableCharacter(codeStr.charAt(cursor.getCurrentColumn())));
+        int skippedChars = 0;
+        while (cursor.getCurrentColumn() < codeStr.length() && ParsingUtils
+                .isSkippeableCharacter(codeStr.charAt(cursor.getCurrentColumn()))) {
+            cursor.nextColumn(codeStr.charAt(cursor.getCurrentColumn()));
+            skippedChars++;
+        }
+        if (skippedChars > 0) {
             // Previous character is important to detect the boundaries between the tokens
             cursor.previousColumn();
         }
@@ -92,6 +93,10 @@ public class ParsingContext {
         return node;
     }
 
+    public TokenNode createReturnVoidAction() {
+        return nodeFactory.createReturnVoidAction(tokenStartPosition);
+    }
+
     private void validateStructure(TokenNode previousNode, TokenNode currentNode) {
         if (previousNode.isOperand() && currentNode != null && currentNode.isOperand()) {
             // Two successive literal nodes are not allowed
@@ -106,7 +111,7 @@ public class ParsingContext {
         TokenNode node;
         if (previousNode.getType() == TokenType.VARIABLE_TYPE) {
             if (containsLocalVariable(token)) {
-                reportError("Variable `" + token+ "` was already defined");
+                reportError("Variable `" + token + "` was already defined");
             }
             if (ParsingUtils.isReservedKeyword(token)) {
                 reportError("Keyword `" + token + "` cannot be used as a variable name");
@@ -195,5 +200,12 @@ public class ParsingContext {
             return parentContext.isRegistered(functionSignature);
         }
         return functionDefinitions.containsKey(functionSignature.getFunctionName());
+    }
+
+    public TokenNode getVariableRef(String name) {
+        if (!containsVariable(name)) {
+            return null;
+        }
+        return variableDefinitions.get(name);
     }
 }
