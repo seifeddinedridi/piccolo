@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ParsingUtils {
 
-    private static final List<String> VALID_TYPES = Arrays.asList("int", "string");
+    private static final List<String> VALID_TYPES = Arrays.asList("int", "string", "void");
     private static final List<String> RESERVED_KEYWORDS = new ArrayList<>(VALID_TYPES);
     static {
         RESERVED_KEYWORDS.add("return");

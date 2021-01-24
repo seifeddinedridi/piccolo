@@ -69,7 +69,7 @@ public class TokenNodeFactory {
     }
 
     private TokenNode createVoidToken(Cursor tokenStartPosition) {
-        return new TokenNode(TokenType.NULL, "void", 0, null, tokenStartPosition);
+        return new TokenNode(TokenType.LITERAL, "void", 0, null, tokenStartPosition);
     }
 
     public TokenNode createExpression(Cursor tokenStartPosition) {

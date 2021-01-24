@@ -49,7 +49,9 @@ public class FunctionParser implements Parser<FunctionNode> {
                 TokenNode returnNode = functionBody.getReturnNode();
                 String functionReturnType = functionSignature.getFunctionReturnType().getName();
                 if (!functionReturnType.equals(returnNode.getNodeReturnType(childContext))) {
-                    childContext.moveToCursor(returnNode.getTokenStartPosition());
+                    if (returnNode.getTokenStartPosition() != null) {
+                        childContext.moveToCursor(returnNode.getTokenStartPosition());
+                    }
                     childContext.reportError("Return type '" + returnNode.getName()
                             + "' does not match function's return type '" + functionReturnType + "'");
                 }

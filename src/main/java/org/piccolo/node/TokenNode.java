@@ -66,7 +66,7 @@ public class TokenNode {
             case VARIABLE_DEFINITION:
                 return children.get(0).getName();
             case LITERAL:
-                return "int"; // @TODO: literals should have a type as an attribute
+                return name; // @TODO: literals should have a type as an attribute
             case IDENTIFIER:
                 return context.getVariableRef(name).getChildren().get(1).getName();
             case OPERATOR:
