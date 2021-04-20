@@ -6,6 +6,7 @@ import org.piccolo.node.TokenNode;
 import org.piccolo.node.TokenNodeFactory;
 import org.piccolo.node.TokenType;
 import org.piccolo.exception.ParsingException;
+import org.piccolo.node.VariableType;
 import org.piccolo.util.ParsingUtils;
 
 import java.util.HashMap;
@@ -77,11 +78,11 @@ public class ParsingContext {
         TokenNode node = null;
         if (!token.isEmpty()) {
             if (ParsingUtils.isType(token)) {
-                node = nodeFactory.createPrimitiveType(token, tokenStartPosition);
+                node = nodeFactory.createPrimitiveNode(token, tokenStartPosition);
             } else if (ParsingUtils.isIdentifier(token)) {
                 node = createIdentifier(token);
             } else if (ParsingUtils.isNumber(token)) {
-                node = nodeFactory.createLiteral(token, tokenStartPosition);
+                node = nodeFactory.createLiteral(token, VariableType.INTEGER, tokenStartPosition);
             } else if (ParsingUtils.isOperator(token.charAt(0))) {
                 node = nodeFactory.createOperator(token, tokenStartPosition);
             }

@@ -1,20 +1,21 @@
 package org.piccolo.parsing;
 
+import org.junit.jupiter.api.Test;
+import org.piccolo.context.ErrorListener;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.exception.ParsingException;
+import org.piccolo.node.FunctionNode;
+import org.piccolo.node.TokenType;
+import org.piccolo.parsing.impl.FunctionParser;
+import org.piccolo.util.TokenJsonNodeMatcher;
+import org.piccolo.util.TokenNodeUtil;
+
 import static com.jayway.jsonassert.JsonAssert.with;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import org.junit.jupiter.api.Test;
-import org.piccolo.node.FunctionNode;
-import org.piccolo.node.TokenType;
-import org.piccolo.context.ErrorListener;
-import org.piccolo.context.ParsingContext;
-import org.piccolo.exception.ParsingException;
-import org.piccolo.parsing.impl.FunctionParser;
-import org.piccolo.util.TokenNodeUtil;
-import org.piccolo.util.TokenJsonNodeMatcher;
 
 public class FunctionParserTest {
 
@@ -28,18 +29,19 @@ public class FunctionParserTest {
 
         String json = TokenNodeUtil.toJson(functionDefinition);
         with(json)
-            .assertThat("$", new TokenJsonNodeMatcher(TokenType.FUNCTION_DEFINITION, ""))
-            .assertThat("$.children", hasSize(2))
-            .assertThat("$.children[0]", new TokenJsonNodeMatcher(TokenType.FUNCTION_SIGNATURE, ""))
-            .assertThat("$.children[0].children", hasSize(2))
-            .assertThat("$.children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "helloWorld"))
-            .assertThat("$.children[0].children[0].children", hasSize(2))
-            .assertThat("$.children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "helloWorld"))
-            .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "void"))
-            .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
-            .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
-            .assertThat("$.children[1].children", hasSize(1))
-            .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
+                .assertThat("$", new TokenJsonNodeMatcher(TokenType.FUNCTION_DEFINITION, ""))
+                .assertThat("$.children", hasSize(2))
+                .assertThat("$.children[0]", new TokenJsonNodeMatcher(TokenType.FUNCTION_SIGNATURE, ""))
+                .assertThat("$.children[0].children", hasSize(2))
+                .assertThat("$.children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "helloWorld"))
+                .assertThat("$.children[0].children[0].children", hasSize(2))
+                .assertThat("$.children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "helloWorld"))
+                .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, ""))
+                .assertThat("$.children[0].children[0].children[1].variableType", equalTo("VOID"))
+                .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
+                .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
+                .assertThat("$.children[1].children", hasSize(1))
+                .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
     }
 
     @Test
@@ -48,28 +50,30 @@ public class FunctionParserTest {
         assertNotNull(functionDefinition);
         String json = TokenNodeUtil.toJson(functionDefinition);
         with(json)
-            .assertThat("$", new TokenJsonNodeMatcher(TokenType.FUNCTION_DEFINITION, ""))
-            .assertThat("$.children", hasSize(2))
-            .assertThat("$.children[0]", new TokenJsonNodeMatcher(TokenType.FUNCTION_SIGNATURE, ""))
-            .assertThat("$.children[0].children", hasSize(2))
-            .assertThat("$.children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "helloWorld"))
-            .assertThat("$.children[0].children[0].children", hasSize(2))
-            .assertThat("$.children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "helloWorld"))
-            .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
-            .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
-            .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
-            .assertThat("$.children[1].children", hasSize(2))
-            .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "="))
-            .assertThat("$.children[1].children[0].children", hasSize(2))
-            .assertThat("$.children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "x"))
-            .assertThat("$.children[1].children[0].children[0].children", hasSize(2))
-            .assertThat("$.children[1].children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "x"))
-            .assertThat("$.children[1].children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
-            .assertThat("$.children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "+"))
-            .assertThat("$.children[1].children[0].children[1].children", hasSize(2))
-            .assertThat("$.children[1].children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.LITERAL, "1"))
-            .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.LITERAL, "2"))
-            .assertThat("$.children[1].children[1]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
+                .assertThat("$", new TokenJsonNodeMatcher(TokenType.FUNCTION_DEFINITION, ""))
+                .assertThat("$.children", hasSize(2))
+                .assertThat("$.children[0]", new TokenJsonNodeMatcher(TokenType.FUNCTION_SIGNATURE, ""))
+                .assertThat("$.children[0].children", hasSize(2))
+                .assertThat("$.children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "helloWorld"))
+                .assertThat("$.children[0].children[0].children", hasSize(2))
+                .assertThat("$.children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "helloWorld"))
+                .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, ""))
+                .assertThat("$.children[0].children[0].children[1].variableType", equalTo("INTEGER"))
+                .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
+                .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
+                .assertThat("$.children[1].children", hasSize(2))
+                .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "="))
+                .assertThat("$.children[1].children[0].children", hasSize(2))
+                .assertThat("$.children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "x"))
+                .assertThat("$.children[1].children[0].children[0].children", hasSize(2))
+                .assertThat("$.children[1].children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "x"))
+                .assertThat("$.children[1].children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, ""))
+                .assertThat("$.children[1].children[0].children[0].children[1].variableType", equalTo("INTEGER"))
+                .assertThat("$.children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "+"))
+                .assertThat("$.children[1].children[0].children[1].children", hasSize(2))
+                .assertThat("$.children[1].children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.LITERAL, "1"))
+                .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.LITERAL, "2"))
+                .assertThat("$.children[1].children[1]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
     }
 
     @Test
@@ -78,35 +82,39 @@ public class FunctionParserTest {
         assertNotNull(functionDefinition);
         String json = TokenNodeUtil.toJson(functionDefinition);
         with(json)
-            .assertThat("$", new TokenJsonNodeMatcher(TokenType.FUNCTION_DEFINITION, ""))
-            .assertThat("$.children", hasSize(2))
-            .assertThat("$.children[0]", new TokenJsonNodeMatcher(TokenType.FUNCTION_SIGNATURE, ""))
-            .assertThat("$.children[0].children", hasSize(2))
-            .assertThat("$.children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "helloWorld"))
-            .assertThat("$.children[0].children[0].children", hasSize(2))
-            .assertThat("$.children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "helloWorld"))
-            .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
-            .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
-            .assertThat("$.children[0].children[1].children", hasSize(2))
-            .assertThat("$.children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "x"))
-            .assertThat("$.children[0].children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "x"))
-            .assertThat("$.children[0].children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
-            .assertThat("$.children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "y"))
-            .assertThat("$.children[0].children[1].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "y"))
-            .assertThat("$.children[0].children[1].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
-            .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
-            .assertThat("$.children[1].children", hasSize(2))
-            .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "="))
-            .assertThat("$.children[1].children[0].children", hasSize(2))
-            .assertThat("$.children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "z"))
-            .assertThat("$.children[1].children[0].children[0].children", hasSize(2))
-            .assertThat("$.children[1].children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "z"))
-            .assertThat("$.children[1].children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, "int"))
-            .assertThat("$.children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "+"))
-            .assertThat("$.children[1].children[0].children[1].children", hasSize(2))
-            .assertThat("$.children[1].children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "x"))
-            .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "y"))
-            .assertThat("$.children[1].children[1]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
+                .assertThat("$", new TokenJsonNodeMatcher(TokenType.FUNCTION_DEFINITION, ""))
+                .assertThat("$.children", hasSize(2))
+                .assertThat("$.children[0]", new TokenJsonNodeMatcher(TokenType.FUNCTION_SIGNATURE, ""))
+                .assertThat("$.children[0].children", hasSize(2))
+                .assertThat("$.children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "helloWorld"))
+                .assertThat("$.children[0].children[0].children", hasSize(2))
+                .assertThat("$.children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "helloWorld"))
+                .assertThat("$.children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, ""))
+                .assertThat("$.children[0].children[0].children[1].variableType", equalTo("INTEGER"))
+                .assertThat("$.children[0].children[1]", new TokenJsonNodeMatcher(TokenType.PARAMETER_LIST, ""))
+                .assertThat("$.children[0].children[1].children", hasSize(2))
+                .assertThat("$.children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "x"))
+                .assertThat("$.children[0].children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "x"))
+                .assertThat("$.children[0].children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, ""))
+                .assertThat("$.children[0].children[1].children[0].children[1].variableType", equalTo("INTEGER"))
+                .assertThat("$.children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "y"))
+                .assertThat("$.children[0].children[1].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "y"))
+                .assertThat("$.children[0].children[1].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, ""))
+                .assertThat("$.children[0].children[1].children[1].children[1].variableType", equalTo("INTEGER"))
+                .assertThat("$.children[1]", new TokenJsonNodeMatcher(TokenType.FUNCTION_BODY, ""))
+                .assertThat("$.children[1].children", hasSize(2))
+                .assertThat("$.children[1].children[0]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "="))
+                .assertThat("$.children[1].children[0].children", hasSize(2))
+                .assertThat("$.children[1].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.VARIABLE_DEFINITION, "z"))
+                .assertThat("$.children[1].children[0].children[0].children", hasSize(2))
+                .assertThat("$.children[1].children[0].children[0].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "z"))
+                .assertThat("$.children[1].children[0].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.VARIABLE_TYPE, ""))
+                .assertThat("$.children[1].children[0].children[0].children[1].variableType", equalTo("INTEGER"))
+                .assertThat("$.children[1].children[0].children[1]", new TokenJsonNodeMatcher(TokenType.OPERATOR, "+"))
+                .assertThat("$.children[1].children[0].children[1].children", hasSize(2))
+                .assertThat("$.children[1].children[0].children[1].children[0]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "x"))
+                .assertThat("$.children[1].children[0].children[1].children[1]", new TokenJsonNodeMatcher(TokenType.IDENTIFIER, "y"))
+                .assertThat("$.children[1].children[1]", new TokenJsonNodeMatcher(TokenType.RETURN_ACTION, "return"));
     }
 
     @Test

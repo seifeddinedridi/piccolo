@@ -51,12 +51,12 @@ public class TokenNodeFactory {
         return new TokenNode(TokenType.IDENTIFIER, name, 0, Collections.emptyList(), tokenStartPosition);
     }
 
-    public TokenNode createLiteral(String value, Cursor tokenStartPosition) {
-        return new TokenNode(TokenType.LITERAL, value, 0, Collections.emptyList(), tokenStartPosition);
+    public TokenNode createLiteral(String value, VariableType variableType, Cursor tokenStartPosition) {
+        return new TokenNode(value, variableType, tokenStartPosition);
     }
 
-    public TokenNode createPrimitiveType(String type, Cursor tokenStartPosition) {
-        return new TokenNode(TokenType.VARIABLE_TYPE, type, 0, Collections.emptyList(), tokenStartPosition);
+    public TokenNode createPrimitiveNode(String type, Cursor tokenStartPosition) {
+        return new TokenNode(TokenType.VARIABLE_TYPE, VariableType.fromString(type), tokenStartPosition);
     }
 
     public TokenNode createReturnAction(Cursor tokenStartPosition) {
@@ -69,7 +69,7 @@ public class TokenNodeFactory {
     }
 
     private TokenNode createVoidToken(Cursor tokenStartPosition) {
-        return new TokenNode(TokenType.LITERAL, "void", 0, null, tokenStartPosition);
+        return new TokenNode(TokenType.VARIABLE_TYPE, VariableType.VOID, tokenStartPosition);
     }
 
     public TokenNode createExpression(Cursor tokenStartPosition) {

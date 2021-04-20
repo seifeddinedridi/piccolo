@@ -4,6 +4,7 @@ import org.piccolo.context.Cursor;
 import org.piccolo.context.ParsingContext;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TokenNode {
@@ -11,10 +12,21 @@ public class TokenNode {
     public static final TokenNode NULl_TOKEN = new TokenNode(TokenType.NULL, null, 0, null, null);
 
     protected final TokenType type;
+    protected VariableType variableType;
     protected final List<TokenNode> children;
     protected final int precedence;
     private final String name;
     private final Cursor tokenStartPosition;
+
+    public TokenNode(TokenType type, VariableType variableType, Cursor tokenStartPosition) {
+        this(type, "", 0, Collections.emptyList(), tokenStartPosition);
+        this.variableType = variableType;
+    }
+
+    public TokenNode(String value, VariableType variableType, Cursor tokenStartPosition) {
+        this(TokenType.LITERAL, value, 0, Collections.emptyList(), tokenStartPosition);
+        this.variableType = variableType;
+    }
 
     public TokenNode(TokenType type, String name, int precedence, List<TokenNode> children, Cursor tokenStartPosition) {
         this.type = type;
@@ -66,7 +78,7 @@ public class TokenNode {
             case VARIABLE_DEFINITION:
                 return children.get(0).getName();
             case LITERAL:
-                return name; // @TODO: literals should have a type as an attribute
+                return getVariableType();
             case IDENTIFIER:
                 return context.getVariableRef(name).getChildren().get(1).getName();
             case OPERATOR:
@@ -74,7 +86,7 @@ public class TokenNode {
                     if (children.get(0).getType() == TokenType.IDENTIFIER) {
                         return context.getVariableRef(children.get(1).getName()).getChildren().get(0).getName();
                     } else if (children.get(0).getType() == TokenType.LITERAL) {
-                        return "int"; // @TODO: literals should have a type as an attribute
+                        return children.get(0).getVariableType();
                     } else if (children.get(0).getType() == TokenType.OPERATOR) {
                         return getNodeReturnType(context);
                     }
@@ -85,6 +97,10 @@ public class TokenNode {
                 }
         }
         return "";
+    }
+
+    public String getVariableType() {
+        return variableType.toString();
     }
 
     @Override

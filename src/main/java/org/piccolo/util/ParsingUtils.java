@@ -1,20 +1,30 @@
 package org.piccolo.util;
 
+import org.piccolo.node.VariableType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParsingUtils {
 
-    private static final List<String> VALID_TYPES = Arrays.asList("int", "string", "void");
-    private static final List<String> RESERVED_KEYWORDS = new ArrayList<>(VALID_TYPES);
+    private static final List<String> RESERVED_KEYWORDS = new ArrayList<>();
 
     static {
+        RESERVED_KEYWORDS.addAll(Arrays.stream(VariableType.values())
+                .map(VariableType::toString)
+                .collect(Collectors.toList()));
         RESERVED_KEYWORDS.add("return");
     }
 
     public static boolean isType(String token) {
-        return VALID_TYPES.contains(token);
+        try {
+            VariableType.fromString(token);
+            return true;
+        } catch (IllegalArgumentException ignored) {
+            return false;
+        }
     }
 
     public static boolean isIdentifier(String token) {
