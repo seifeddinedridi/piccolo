@@ -4,12 +4,11 @@ import org.piccolo.node.FunctionBodyNode;
 import org.piccolo.node.TokenNode;
 import org.piccolo.node.TokenType;
 import org.piccolo.parsing.Parser;
-import org.piccolo.parsing.context.ParsingContext;
-import org.piccolo.parsing.exception.ParsingException;
-import org.piccolo.parsing.util.ParsingUtils;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.exception.ParsingException;
+import org.piccolo.util.ParsingUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 class FunctionBodyParser implements Parser<FunctionBodyNode> {
@@ -46,7 +45,7 @@ class FunctionBodyParser implements Parser<FunctionBodyNode> {
 
     @Override
     public boolean matchEnd(ParsingContext context, String codeStr) {
-        if (ParsingUtils.isSkippeableCharacter(codeStr.charAt(context.getCurrentColumn()))) {
+        if (ParsingUtils.canSkip(codeStr.charAt(context.getCurrentColumn()))) {
             context.skipNonParsableCharacter(codeStr);
             context.nextColumn(codeStr);
         }

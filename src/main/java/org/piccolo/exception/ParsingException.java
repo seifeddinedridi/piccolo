@@ -1,6 +1,6 @@
-package org.piccolo.parsing.exception;
+package org.piccolo.exception;
 
-import org.piccolo.parsing.context.ParsingContext;
+import org.piccolo.context.ParsingContext;
 
 public class ParsingException extends RuntimeException {
 

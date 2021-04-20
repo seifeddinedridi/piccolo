@@ -1,7 +1,7 @@
 package org.piccolo.node;
 
-import org.piccolo.parsing.context.Cursor;
-import org.piccolo.parsing.context.ParsingContext;
+import org.piccolo.context.Cursor;
+import org.piccolo.context.ParsingContext;
 
 import java.util.Arrays;
 import java.util.List;

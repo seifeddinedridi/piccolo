@@ -1,12 +1,12 @@
-package org.piccolo.parsing.exception;
+package org.piccolo.exception;
 
-public class CompilationError {
+public class CompilationException {
 
     int line;
     int position;
     String errorMessage;
 
-    public CompilationError(String errorMessage, int line, int position) {
+    public CompilationException(String errorMessage, int line, int position) {
         this.errorMessage = errorMessage;
         this.line = line;
         this.position = position;

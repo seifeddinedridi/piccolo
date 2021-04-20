@@ -1,4 +1,4 @@
-package org.piccolo.parsing.util;
+package org.piccolo.util;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

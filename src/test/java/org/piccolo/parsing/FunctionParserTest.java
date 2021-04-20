@@ -9,16 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.piccolo.node.FunctionNode;
 import org.piccolo.node.TokenType;
-import org.piccolo.parsing.context.CompilationErrorListener;
-import org.piccolo.parsing.context.ParsingContext;
-import org.piccolo.parsing.exception.ParsingException;
+import org.piccolo.context.ErrorListener;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.exception.ParsingException;
 import org.piccolo.parsing.impl.FunctionParser;
-import org.piccolo.parsing.util.TokenNodeUtil;
-import org.piccolo.parsing.util.TokenJsonNodeMatcher;
+import org.piccolo.util.TokenNodeUtil;
+import org.piccolo.util.TokenJsonNodeMatcher;
 
 public class FunctionParserTest {
 
-    private final ParsingContext context = new ParsingContext(new CompilationErrorListener());
+    private final ParsingContext context = new ParsingContext(new ErrorListener());
     private final FunctionParser functionParser = new FunctionParser();
 
     @Test

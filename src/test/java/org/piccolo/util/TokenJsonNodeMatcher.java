@@ -1,4 +1,4 @@
-package org.piccolo.parsing.util;
+package org.piccolo.util;
 
 import com.google.gson.JsonElement;
 import java.util.Map;

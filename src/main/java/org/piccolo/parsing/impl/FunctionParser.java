@@ -5,9 +5,9 @@ import org.piccolo.node.FunctionSignatureNode;
 import org.piccolo.node.TokenNode;
 import org.piccolo.node.TokenType;
 import org.piccolo.parsing.Parser;
-import org.piccolo.parsing.context.ParsingContext;
-import org.piccolo.parsing.exception.ParsingException;
-import org.piccolo.parsing.util.ParsingUtils;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.exception.ParsingException;
+import org.piccolo.util.ParsingUtils;
 import org.piccolo.node.FunctionNode;
 import org.piccolo.node.ParameterListNode;
 

@@ -1,9 +1,9 @@
 package org.piccolo.parsing;
 
-import org.piccolo.parsing.context.ParsingContext;
-import org.piccolo.parsing.exception.ParsingException;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.exception.ParsingException;
 import org.piccolo.node.TokenNode;
-import org.piccolo.parsing.util.ParsingUtils;
+import org.piccolo.util.ParsingUtils;
 
 public interface Parser<T extends TokenNode> {
 
@@ -17,9 +17,9 @@ public interface Parser<T extends TokenNode> {
 
     default void matchStartingCharacter(ParsingContext context, String codeStr, char expectedChar) {
         context.skipSpace(codeStr);
-        if (ParsingUtils.isSkippeableCharacter(codeStr.charAt(context.getCurrentColumn()))) {
+        if (ParsingUtils.canSkip(codeStr.charAt(context.getCurrentColumn()))) {
             context.skipNonParsableCharacter(codeStr);
-            if (ParsingUtils.isSkippeableCharacter(codeStr.charAt(context.getCurrentColumn()))) {
+            if (ParsingUtils.canSkip(codeStr.charAt(context.getCurrentColumn()))) {
                 context.nextColumn(codeStr);
             }
         }

@@ -5,7 +5,7 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.piccolo.parsing.context.Cursor;
+import org.piccolo.context.Cursor;
 
 public class TokenNodeFactory {
 

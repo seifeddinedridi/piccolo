@@ -2,7 +2,7 @@ package org.piccolo.node;
 
 import java.util.ArrayList;
 import java.util.Stack;
-import org.piccolo.parsing.context.Cursor;
+import org.piccolo.context.Cursor;
 
 public class ExpressionNode extends TokenNode {
 

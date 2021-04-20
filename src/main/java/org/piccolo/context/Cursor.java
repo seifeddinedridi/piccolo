@@ -1,4 +1,4 @@
-package org.piccolo.parsing.context;
+package org.piccolo.context;
 
 public class Cursor {
 

@@ -6,15 +6,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.piccolo.parsing.impl.LanguageParser;
 import org.piccolo.node.TokenNode;
-import org.piccolo.parsing.context.CompilationErrorListener;
-import org.piccolo.parsing.context.ParsingContext;
-import org.piccolo.parsing.exception.ParsingException;
+import org.piccolo.context.ErrorListener;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.exception.ParsingException;
 
 public class PiccoloApplication {
 
     public static void main(String[] args) {
         LanguageParser parser = new LanguageParser();
-        ParsingContext context = new ParsingContext(new CompilationErrorListener());
+        ParsingContext context = new ParsingContext(new ErrorListener());
         TokenNode moduleNode;
         try {
             String code = Files.readString(Paths.get(PiccoloApplication.class.getResource("/sample_code.txt").toURI()));

@@ -5,9 +5,9 @@ import org.piccolo.node.TokenNode;
 import org.piccolo.node.TokenNodeFactory;
 import org.piccolo.node.TokenType;
 import org.piccolo.parsing.Parser;
-import org.piccolo.parsing.context.ParsingContext;
-import org.piccolo.parsing.exception.ParsingException;
-import org.piccolo.parsing.util.ParsingUtils;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.exception.ParsingException;
+import org.piccolo.util.ParsingUtils;
 
 public class ExpressionParser implements Parser<TokenNode> {
 
@@ -72,7 +72,7 @@ public class ExpressionParser implements Parser<TokenNode> {
             context.clearTokenStartPosition();
             context.reportError("Found unexpected character `" + currentChar + "`");
         }
-        if (!ParsingUtils.isSkippeableCharacter(currentChar)) {
+        if (!ParsingUtils.canSkip(currentChar)) {
             context.appendChar(currentChar);
         }
         context.nextColumn(codeStr);

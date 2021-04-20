@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.piccolo.node.TokenNode;
 import org.piccolo.node.TokenNodeFactory;
 import org.piccolo.node.TokenType;
-import org.piccolo.parsing.context.CompilationErrorListener;
-import org.piccolo.parsing.context.ParsingContext;
-import org.piccolo.parsing.util.TokenNodeMatcher;
+import org.piccolo.context.ErrorListener;
+import org.piccolo.context.ParsingContext;
+import org.piccolo.util.TokenNodeMatcher;
 
 public class TokenNodeTest {
 
-    private final ParsingContext context = new ParsingContext(new CompilationErrorListener());
+    private final ParsingContext context = new ParsingContext(new ErrorListener());
     private final TokenNodeFactory factory = TokenNodeFactory.getInstance();
 
     @Test

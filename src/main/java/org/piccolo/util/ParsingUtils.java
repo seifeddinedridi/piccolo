@@ -1,4 +1,4 @@
-package org.piccolo.parsing.util;
+package org.piccolo.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,7 @@ public class ParsingUtils {
 
     private static final List<String> VALID_TYPES = Arrays.asList("int", "string", "void");
     private static final List<String> RESERVED_KEYWORDS = new ArrayList<>(VALID_TYPES);
+
     static {
         RESERVED_KEYWORDS.add("return");
     }
@@ -43,11 +44,11 @@ public class ParsingUtils {
 
     public static boolean isOperator(char currentChar) {
         return currentChar == '=' || currentChar == '+' || currentChar == '-' || currentChar == '*'
-            || currentChar == '/'
-            || currentChar == '%';
+                || currentChar == '/'
+                || currentChar == '%';
     }
 
-    public static boolean isSkippeableCharacter(char character) {
+    public static boolean canSkip(char character) {
         return character == ' ' || character == '\n' || character == '\r';
     }
 

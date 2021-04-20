@@ -1,4 +1,4 @@
-package org.piccolo.parsing.util;
+package org.piccolo.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

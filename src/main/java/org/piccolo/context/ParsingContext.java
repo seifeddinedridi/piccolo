@@ -1,19 +1,19 @@
-package org.piccolo.parsing.context;
+package org.piccolo.context;
 
 import org.piccolo.node.FunctionNode;
 import org.piccolo.node.FunctionSignatureNode;
 import org.piccolo.node.TokenNode;
 import org.piccolo.node.TokenNodeFactory;
 import org.piccolo.node.TokenType;
-import org.piccolo.parsing.exception.ParsingException;
-import org.piccolo.parsing.util.ParsingUtils;
+import org.piccolo.exception.ParsingException;
+import org.piccolo.util.ParsingUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ParsingContext {
 
-    private final CompilationErrorListener errorListener;
+    private final ErrorListener errorListener;
     private final StringBuilder tokenBuffer;
     private final Map<String, TokenNode> variableDefinitions;
     private final Map<String, TokenNode> functionDefinitions;
@@ -23,7 +23,7 @@ public class ParsingContext {
     private TokenNode previousNode = TokenNode.NULl_TOKEN;
     private Cursor tokenStartPosition;
 
-    public ParsingContext(CompilationErrorListener errorListener) {
+    public ParsingContext(ErrorListener errorListener) {
         this.cursor = new Cursor();
         this.nodeFactory = TokenNodeFactory.getInstance();
         this.variableDefinitions = new HashMap<>();
@@ -47,7 +47,7 @@ public class ParsingContext {
     public void skipNonParsableCharacter(String codeStr) {
         int skippedChars = 0;
         while (cursor.getCurrentColumn() < codeStr.length() && ParsingUtils
-                .isSkippeableCharacter(codeStr.charAt(cursor.getCurrentColumn()))) {
+                .canSkip(codeStr.charAt(cursor.getCurrentColumn()))) {
             cursor.nextColumn(codeStr.charAt(cursor.getCurrentColumn()));
             skippedChars++;
         }
