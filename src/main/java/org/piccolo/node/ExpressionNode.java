@@ -6,19 +6,17 @@ import org.piccolo.context.Cursor;
 
 public class ExpressionNode extends TokenNode {
 
-    public ExpressionNode(String name, Cursor tokenStartPosition) {
-        super(TokenType.EXPRESSION, name, 0, new ArrayList<>(), tokenStartPosition);
+    public ExpressionNode(Cursor tokenStartPosition) {
+        super(TokenType.EXPRESSION, "", 0, new ArrayList<>(), tokenStartPosition);
     }
 
     public void addChild(TokenNode node) {
         Stack<TokenNode> nodeStack = new Stack<>();
-        if (type == TokenType.EXPRESSION) {
-            if (!children.isEmpty()) {
-                nodeStack.push(children.get(0));
-                nodeStack.push(this);
-            } else {
-                children.add(node);
-            }
+        if (!children.isEmpty()) {
+            nodeStack.push(children.get(0));
+            nodeStack.push(this);
+        } else {
+            children.add(node);
         }
         while (!nodeStack.isEmpty()) {
             TokenNode parentOfCurrentNode = nodeStack.pop();

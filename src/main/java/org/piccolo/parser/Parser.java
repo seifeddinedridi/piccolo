@@ -1,4 +1,4 @@
-package org.piccolo.parsing;
+package org.piccolo.parser;
 
 import org.piccolo.context.ParsingContext;
 import org.piccolo.exception.ParsingException;

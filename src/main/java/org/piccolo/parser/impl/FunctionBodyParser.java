@@ -1,9 +1,9 @@
-package org.piccolo.parsing.impl;
+package org.piccolo.parser.impl;
 
 import org.piccolo.node.FunctionBodyNode;
 import org.piccolo.node.TokenNode;
 import org.piccolo.node.TokenType;
-import org.piccolo.parsing.Parser;
+import org.piccolo.parser.Parser;
 import org.piccolo.context.ParsingContext;
 import org.piccolo.exception.ParsingException;
 import org.piccolo.util.ParsingUtils;

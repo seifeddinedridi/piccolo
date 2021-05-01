@@ -78,11 +78,11 @@ public class ParsingContext {
         TokenNode node = null;
         if (!token.isEmpty()) {
             if (ParsingUtils.isType(token)) {
-                node = nodeFactory.createPrimitiveNode(token, tokenStartPosition);
+                node = nodeFactory.createPrimitiveNode(VariableType.fromString(token), tokenStartPosition);
             } else if (ParsingUtils.isIdentifier(token)) {
                 node = createIdentifier(token);
             } else if (ParsingUtils.isNumber(token)) {
-                node = nodeFactory.createLiteral(token, VariableType.INTEGER, tokenStartPosition);
+                node = nodeFactory.createInteger(Integer.parseInt(token), tokenStartPosition);
             } else if (ParsingUtils.isOperator(token.charAt(0))) {
                 node = nodeFactory.createOperator(token, tokenStartPosition);
             }

@@ -1,12 +1,8 @@
-package org.piccolo.parsing;
+package org.piccolo.node;
 
 import org.junit.jupiter.api.Test;
 import org.piccolo.context.ErrorListener;
 import org.piccolo.context.ParsingContext;
-import org.piccolo.node.TokenNode;
-import org.piccolo.node.TokenNodeFactory;
-import org.piccolo.node.TokenType;
-import org.piccolo.node.VariableType;
 import org.piccolo.util.TokenNodeMatcher;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,11 +17,11 @@ public class TokenNodeTest {
     @Test
     public void testMultiplicationHasHigherPrecedenceOverAddition() {
         TokenNode expression = factory.createExpression(context.getCursor());
-        expression.addChild(factory.createLiteral("1", VariableType.INTEGER, context.getCursor()));
+        expression.addChild(factory.createInteger(1, context.getCursor()));
         expression.addChild(factory.createOperator("+", context.getCursor()));
-        expression.addChild(factory.createLiteral("2", VariableType.INTEGER, context.getCursor()));
+        expression.addChild(factory.createInteger(2, context.getCursor()));
         expression.addChild(factory.createOperator("*", context.getCursor()));
-        expression.addChild(factory.createLiteral("3", VariableType.INTEGER, context.getCursor()));
+        expression.addChild(factory.createInteger(3, context.getCursor()));
         TokenNode rootNode = expression.getChildren().get(0);
         assertThat(rootNode, new TokenNodeMatcher(TokenType.OPERATOR, "+"));
         assertNotNull(rootNode.getChildren());
@@ -41,11 +37,11 @@ public class TokenNodeTest {
     public void testSimpleReturnStatement() {
         TokenNode expression = factory.createExpression(context.getCursor());
         expression.addChild(factory.createReturnAction(context.getCursor()));
-        expression.addChild(factory.createLiteral("1", VariableType.INTEGER, context.getCursor()));
+        expression.addChild(factory.createInteger(1, context.getCursor()));
         expression.addChild(factory.createOperator("+", context.getCursor()));
-        expression.addChild(factory.createLiteral("2", VariableType.INTEGER, context.getCursor()));
+        expression.addChild(factory.createInteger(2, context.getCursor()));
         expression.addChild(factory.createOperator("*", context.getCursor()));
-        expression.addChild(factory.createLiteral("3", VariableType.INTEGER, context.getCursor()));
+        expression.addChild(factory.createInteger(3, context.getCursor()));
         TokenNode rootNode = expression.getChildren().get(0);
         assertThat(rootNode, new TokenNodeMatcher(TokenType.RETURN_ACTION, "return"));
         assertNotNull(rootNode.getChildren());

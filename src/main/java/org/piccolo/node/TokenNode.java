@@ -3,20 +3,20 @@ package org.piccolo.node;
 import org.piccolo.context.Cursor;
 import org.piccolo.context.ParsingContext;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class TokenNode {
 
     public static final TokenNode NULl_TOKEN = new TokenNode(TokenType.NULL, null, 0, null, null);
 
     protected final TokenType type;
-    protected VariableType variableType;
     protected final List<TokenNode> children;
     protected final int precedence;
     private final String name;
     private final Cursor tokenStartPosition;
+    protected VariableType variableType;
 
     public TokenNode(TokenType type, VariableType variableType, Cursor tokenStartPosition) {
         this(type, "", 0, Collections.emptyList(), tokenStartPosition);
@@ -51,10 +51,6 @@ public class TokenNode {
     public boolean isOperand() {
         return type == TokenType.LITERAL || type == TokenType.IDENTIFIER
                 || type == TokenType.VARIABLE_DEFINITION;
-    }
-
-    public boolean matchesTypes(TokenType... types) {
-        return Arrays.asList(types).contains(type);
     }
 
     public TokenType getType() {
@@ -107,7 +103,10 @@ public class TokenNode {
     public String toString() {
         return "TokenNode{" +
                 "type=" + type +
+                ", children=" + children +
+                ", precedence=" + precedence +
                 ", name='" + name + '\'' +
+                ", variableType=" + variableType +
                 '}';
     }
 
@@ -122,10 +121,11 @@ public class TokenNode {
 
         TokenNode tokenNode = (TokenNode) o;
 
-        if (type != tokenNode.type) return false;
-        return true;
-//        if (!Objects.equals(name, tokenNode.name)) return false;
-//        return Objects.equals(children, tokenNode.children);
+        return type == tokenNode.type
+                && variableType == tokenNode.variableType
+                && precedence == tokenNode.precedence
+                && Objects.equals(name, tokenNode.name)
+                && Objects.equals(children, tokenNode.children);
     }
 
     @Override
